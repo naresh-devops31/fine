@@ -1,34 +1,6 @@
-node {
-    agent any
-tools { 
-        maven 'Maven 3.0.5' 
-        jdk 'JAVA_HOME' 
-    }
-    stages {
-        stage('Build') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/naresh-devops31/fine.git']]])
-                 sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
-                sh 'mvn install'
-                
-                echo 'Building..'
-                
-                
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn install' 
-            }
-            post {
-                success {
-                    junit 'target/surefire-reports/**/*.xml' 
-                }
-            }
-        }
-       
-    }
+node(‘linux’){
+  git url: 'https://github.com/naresh-devops31/fine.git'
+  def maven = tool 'Maven 3.0.5'
+  env.PATH = "${maven}/bin:${env.PATH}"
+  sh 'mvn -B clean verify'
 }
