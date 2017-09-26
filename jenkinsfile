@@ -1,4 +1,4 @@
-node(‘linux’){
+node('master'){
   git url: 'https://github.com/naresh-devops31/fine.git'
   def maven = tool 'Maven 3.0.5'
   env.PATH = "${maven}/bin:${env.PATH}"
